@@ -1,0 +1,113 @@
+# Staged CI: lint, type-check, knip (parallel) → build (after all pass)
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - release/next
+      - main
+  push:
+    branches:
+      - release/next
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: ESLint
+        run: |
+          echo "🔍 Running linters..."
+          echo "Running: npm run lint"
+          npm run lint
+
+  type-check:
+    name: type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: Generate Next.js route types
+        run: |
+          echo "🔍 Generating route types..."
+          echo "Running: npm run typegen"
+          npm run typegen
+
+      - name: TypeScript
+        run: |
+          echo "🔍 Running type checking..."
+          echo "Running: npm run type-check"
+          npm run type-check
+
+  knip:
+    name: knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: Knip
+        run: |
+          echo "🔍 Running knip..."
+          echo "Running: npm run knip"
+          npm run knip
+
+  build:
+    name: build
+    needs: [lint, type-check, knip]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: Build
+        run: |
+          echo "🔍 Building the application..."
+          echo "Running: npm run build"
+          npm run build
+          echo "✅ Build completed successfully"
