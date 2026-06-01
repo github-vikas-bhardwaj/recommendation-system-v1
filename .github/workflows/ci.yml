@@ -1,0 +1,38 @@
+# Write your CI workflow below — see docs/implementation-checklist.md Phase 3
+# Guide: follow the steps in your chat / implementation doc
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - release/next
+      - main
+  push:
+    branches:
+      - release/next
+      - main
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: ESLint
+        run: |
+          echo "🔍 Running linters..."
+          echo "Running: npm run lint"
+          npm run lint
