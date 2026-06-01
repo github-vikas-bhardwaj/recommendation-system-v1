@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Documentation
+
+Readable docs in the browser (tables, checklists, code blocks):
+
+```bash
+npm run dev
+```
+
+Then open:
+
+- [Implementation checklist](http://localhost:3000/docs/implementation-checklist) — step-by-step CI/CD setup
+- [All docs](http://localhost:3000/docs)
+
 ## Getting Started
 
 First, run the development server:
