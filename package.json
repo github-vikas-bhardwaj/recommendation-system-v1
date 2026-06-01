@@ -1,6 +1,6 @@
 {
   "name": "recommendation-system-v2",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,7 +12,11 @@
     "typegen": "next typegen",
     "knip": "knip",
     "format:fix": "prettier --write",
-    "validate:branch": "sh .husky/validate-branch-name.sh"
+    "validate:branch": "sh .husky/validate-branch-name.sh",
+    "release": "release-it",
+    "release:dry-run": "release-it -VV --dry-run",
+    "release:ci": "release-it --ci",
+    "release:ci:dry-run": "release-it --ci -VV --dry-run"
   },
   "dependencies": {
     "next": "16.2.6",
@@ -24,6 +28,7 @@
   "devDependencies": {
     "@commitlint/cli": "21.0.2",
     "@commitlint/config-conventional": "21.0.2",
+    "@release-it/conventional-changelog": "11.0.1",
     "@tailwindcss/postcss": "4",
     "@types/node": "20",
     "@types/react": "19",
@@ -37,6 +42,7 @@
     "knip": "6.14.2",
     "lint-staged": "17.0.6",
     "prettier": "3.8.3",
+    "release-it": "20.2.0",
     "tailwindcss": "4",
     "typescript": "5"
   }
