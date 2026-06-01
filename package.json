@@ -9,6 +9,7 @@
     "prepare": "husky",
     "lint": "eslint . --max-warnings 0",
     "type-check": "tsc --noEmit",
+    "typegen": "next typegen",
     "knip": "knip",
     "format:fix": "prettier --write",
     "validate:branch": "sh .husky/validate-branch-name.sh"

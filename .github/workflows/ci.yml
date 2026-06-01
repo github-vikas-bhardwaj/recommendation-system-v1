@@ -1,4 +1,4 @@
-# Guide: follow the steps in your chat / implementation doc
+# Staged CI: lint, type-check, knip (parallel) → build (after all pass)
 name: CI
 
 on:
@@ -10,9 +10,11 @@ on:
     branches:
       - release/next
       - main
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
 jobs:
   lint:
     name: lint
@@ -38,7 +40,6 @@ jobs:
 
   type-check:
     name: type-check
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -53,11 +54,11 @@ jobs:
           echo "📦 Installing dependencies (npm ci)..."
           npm ci
 
-      - name: Download Next.js build output
-        uses: actions/download-artifact@v4
-        with:
-          name: next-build
-          path: .next
+      - name: Generate Next.js route types
+        run: |
+          echo "🔍 Generating route types..."
+          echo "Running: npm run typegen"
+          npm run typegen
 
       - name: TypeScript
         run: |
@@ -89,6 +90,7 @@ jobs:
 
   build:
     name: build
+    needs: [lint, type-check, knip]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -109,10 +111,3 @@ jobs:
           echo "Running: npm run build"
           npm run build
           echo "✅ Build completed successfully"
-
-      - name: Upload Next.js build output
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-build
-          path: .next
-          retention-days: 1
