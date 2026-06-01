@@ -22,7 +22,7 @@ case "$BRANCH" in
     ;;
 esac
 
-PATTERN='^(feat|fix|refactor|tests|chore|docs|ci|hotfix|perf)/[a-z0-9]+(-[a-z0-9]+)*$'
+PATTERN='^(feat|fix|refactor|tests|chore|docs|ci|hotfix|perf|revert)/[a-z0-9]+(-[a-z0-9]+)*$'
 
 if printf '%s\n' "$BRANCH" | grep -Eq "$PATTERN"; then
   exit 0
