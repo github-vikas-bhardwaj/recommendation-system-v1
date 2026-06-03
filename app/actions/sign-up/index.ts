@@ -2,14 +2,12 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 import { hashPassword } from "@/lib/auth/password";
+import { signUpUser } from "@/lib/auth/services/sign-up.service";
 import { createSession } from "@/lib/auth/session";
 import { insertUser } from "@/lib/db";
 import { usesSecureCookies } from "@/lib/env/app";
-
-import { signUpSchema } from "./schema";
 
 type SignUpValues = {
   name: string;
@@ -19,56 +17,42 @@ type SignUpValues = {
 type SignUpState = {
   success: false;
   message: string;
-  fieldErrors?: z.inferFlattenedErrors<typeof signUpSchema>["fieldErrors"];
+  fieldErrors?: Record<string, string[] | undefined>;
   values?: SignUpValues;
 } | null;
-
-const dbErrorMessages: Record<"EMAIL_TAKEN" | "UNKNOWN", string> = {
-  EMAIL_TAKEN: "An account with this email already exists.",
-  UNKNOWN: "Something went wrong. Please try again.",
-};
 
 export async function signUp(
   _prev: SignUpState,
   formData: FormData,
 ): Promise<SignUpState> {
-  const rawValues = {
-    name: String(formData.get("name") ?? ""),
-    email: String(formData.get("email") ?? ""),
-  };
+  const result = await signUpUser(
+    {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      password: formData.get("password"),
+      confirm: formData.get("confirm"),
+    },
+    { hashPassword, insertUser },
+  );
 
-  const parsed = signUpSchema.safeParse({
-    ...rawValues,
-    password: formData.get("password"),
-    confirm: formData.get("confirm"),
-  });
-
-  if (!parsed.success) {
+  if (result.kind === "validation") {
     return {
       success: false,
-      message: "Please fix the errors below.",
-      fieldErrors: parsed.error.flatten().fieldErrors,
-      values: rawValues,
+      message: result.message,
+      fieldErrors: result.fieldErrors,
+      values: result.values,
     };
   }
 
-  const passwordHash = await hashPassword(parsed.data.password);
-
-  const res = await insertUser({
-    name: parsed.data.name,
-    email: parsed.data.email,
-    passwordHash,
-  });
-
-  if (!res.success) {
+  if (result.kind === "db_error") {
     return {
       success: false,
-      message: dbErrorMessages[res.reason],
-      values: rawValues,
+      message: result.message,
+      values: result.values,
     };
   }
 
-  await createSession(res.userId);
+  await createSession(result.userId);
 
   (await cookies()).set("flash", "Welcome! Your account is ready.", {
     maxAge: 10,

@@ -8,8 +8,7 @@ import {
   findShowById,
   insertUserWatchedShow,
 } from "@/lib/db";
-
-import { toggleShowWatchedSchema } from "./schema";
+import { toggleShowWatchedForUser } from "@/lib/shows/services/toggle-watched.service";
 
 export type ToggleShowWatchedState =
   | { success: true }
@@ -19,38 +18,34 @@ export async function toggleShowWatched(
   _prev: ToggleShowWatchedState,
   formData: FormData,
 ): Promise<ToggleShowWatchedState> {
-  const parsed = toggleShowWatchedSchema.safeParse({
-    showId: formData.get("showId"),
-    watched: formData.get("watched"),
-  });
+  const result = await toggleShowWatchedForUser(
+    {
+      showId: formData.get("showId"),
+      watched: formData.get("watched"),
+    },
+    {
+      getCurrentUser,
+      findShowById,
+      insertUserWatchedShow,
+      deleteUserWatchedShow,
+    },
+  );
 
-  if (!parsed.success) {
-    return { success: false, errors: parsed.error.flatten().fieldErrors };
+  if (result.kind === "validation") {
+    return { success: false, errors: result.errors };
   }
 
-  const user = await getCurrentUser();
-  if (!user) {
-    return {
-      success: false,
-      errors: { root: ["You must be signed in."] },
-    };
+  if (result.kind === "unauthorized") {
+    return { success: false, errors: result.errors };
   }
 
-  const { showId, watched } = parsed.data;
-  const exists = await findShowById(showId);
-  if (exists === null) {
-    return { success: false, errors: { showId: ["Show not found"] } };
-  }
-
-  if (watched) {
-    await insertUserWatchedShow(user.id, showId);
-  } else {
-    await deleteUserWatchedShow(user.id, showId);
+  if (result.kind === "not_found") {
+    return { success: false, errors: result.errors };
   }
 
   revalidatePath("/shows");
   revalidatePath("/recommendations");
-  revalidatePath(`/shows/${showId}`);
+  revalidatePath(`/shows/${result.showId}`);
 
   return { success: true };
 }

@@ -11,3 +11,14 @@ export const signUpSchema = z
     message: "Passwords do not match",
     path: ["confirm"],
   });
+
+export type SignUpInput = z.infer<typeof signUpSchema>;
+
+export type SignUpFieldErrors = z.inferFlattenedErrors<
+  typeof signUpSchema
+>["fieldErrors"];
+
+export type SignUpFormValues = {
+  name: string;
+  email: string;
+};

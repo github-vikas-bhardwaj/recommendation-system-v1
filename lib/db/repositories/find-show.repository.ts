@@ -1,9 +1,9 @@
-import "server-only";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createSupabaseAdminClient } from "@/utils/supabase/admin";
-
-export async function findShowById(showId: number): Promise<number | null> {
-  const supabase = createSupabaseAdminClient();
+export async function findShowById(
+  showId: number,
+  supabase: SupabaseClient,
+): Promise<number | null> {
   const { data, error } = await supabase
     .from("shows")
     .select("id")

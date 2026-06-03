@@ -1,28 +1,15 @@
-import "server-only";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { createSupabaseAdminClient } from "@/utils/supabase/admin";
-
-export type UserWithPassword = {
-  id: number;
-  name: string;
-  email: string;
-  password_hash: string;
-};
-
-type InsertUserInput = {
-  name: string;
-  email: string;
-  passwordHash: string;
-};
-
-type InsertUserResult =
-  | { success: true; userId: number }
-  | { success: false; reason: "EMAIL_TAKEN" | "UNKNOWN" };
+import type {
+  InsertUserInput,
+  InsertUserResult,
+  UserWithPassword,
+} from "@/lib/db/types";
 
 export async function findUserByEmail(
   email: string,
+  supabase: SupabaseClient,
 ): Promise<UserWithPassword | null> {
-  const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("users")
     .select("id, name, email, password_hash")
@@ -39,8 +26,8 @@ export async function findUserByEmail(
 
 export async function insertUser(
   user: InsertUserInput,
+  supabase: SupabaseClient,
 ): Promise<InsertUserResult> {
-  const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("users")
     .insert({
