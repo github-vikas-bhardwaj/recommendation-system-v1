@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["argon2"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "static.tvmaze.com",
+        pathname: "/uploads/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
