@@ -21,6 +21,12 @@ export async function Header() {
           {user ? (
             <>
               <Link
+                href="/recommendations"
+                className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              >
+                Recommendations
+              </Link>
+              <Link
                 href="/shows?page=1"
                 className="rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
               >
