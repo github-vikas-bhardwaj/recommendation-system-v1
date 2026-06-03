@@ -2,6 +2,7 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
+import { usesSecureCookies } from "@/lib/env/app";
 import { createSupabaseAdminClient } from "@/utils/supabase/admin";
 
 import { SESSION_COOKIE_NAME, SESSION_DURATION_SECONDS } from "./constants";
@@ -27,7 +28,7 @@ export async function createSession(userId: number) {
 
   (await cookies()).set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: usesSecureCookies(),
     sameSite: "lax",
     path: "/",
     maxAge: SESSION_DURATION_SECONDS,
