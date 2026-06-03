@@ -2,20 +2,18 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 import { verifyPassword } from "@/lib/auth/password";
+import { signInUser } from "@/lib/auth/services/sign-in.service";
 import { createSession } from "@/lib/auth/session";
 import { findUserByEmail } from "@/lib/db";
 import { usesSecureCookies } from "@/lib/env/app";
-
-import { signInSchema } from "./schema";
 
 type SignInValues = { email: string };
 type SignInState = {
   success: false;
   message: string;
-  fieldErrors?: z.inferFlattenedErrors<typeof signInSchema>["fieldErrors"];
+  fieldErrors?: Record<string, string[] | undefined>;
   values?: SignInValues;
 } | null;
 
@@ -23,46 +21,33 @@ export async function signIn(
   _prev: SignInState,
   formData: FormData,
 ): Promise<SignInState> {
-  const rawValues = {
-    email: String(formData.get("email") ?? ""),
-  };
-
-  const parsed = signInSchema.safeParse({
-    ...rawValues,
-    password: formData.get("password"),
-  });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      message: "Please fix the errors below.",
-      fieldErrors: parsed.error.flatten().fieldErrors,
-      values: rawValues,
-    };
-  }
-
-  const user = await findUserByEmail(parsed.data.email);
-  if (!user) {
-    return {
-      success: false,
-      message: "Wrong credentials! Please try again.",
-    };
-  }
-
-  const isValidPassword = await verifyPassword(
-    user.password_hash,
-    parsed.data.password,
+  const result = await signInUser(
+    {
+      email: String(formData.get("email") ?? ""),
+      password: formData.get("password"),
+    },
+    { findUserByEmail, verifyPassword },
   );
 
-  if (!isValidPassword) {
+  if (result.kind === "validation") {
     return {
       success: false,
-      message: "Wrong credentials! Please try again.",
-      values: rawValues,
+      message: result.message,
+      fieldErrors: result.fieldErrors,
+      values: result.values,
     };
   }
 
-  await createSession(user.id);
+  if (result.kind === "invalid_credentials") {
+    return {
+      success: false,
+      message: result.message,
+      ...(result.values ? { values: result.values } : {}),
+    };
+  }
+
+  await createSession(result.userId);
+
   (await cookies()).set("flash", "Welcome back!", {
     maxAge: 10,
     httpOnly: false,
@@ -70,5 +55,6 @@ export async function signIn(
     sameSite: "lax",
     secure: usesSecureCookies(),
   });
+
   redirect("/shows?page=1");
 }
