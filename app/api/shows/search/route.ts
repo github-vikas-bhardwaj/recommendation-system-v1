@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { searchShowsForUser } from "@/lib/db";
+import { toSearchResultShow } from "@/lib/shows/search-response";
 
 export async function GET(request: Request) {
   const user = await getCurrentUser();
@@ -15,12 +16,6 @@ export async function GET(request: Request) {
   const shows = await searchShowsForUser(user.id, q, 10);
 
   return NextResponse.json({
-    shows: shows.map(({ id, name, source_genres, image_url, watched }) => ({
-      id,
-      name,
-      source_genres,
-      image_url,
-      watched,
-    })),
+    shows: shows.map(toSearchResultShow),
   });
 }

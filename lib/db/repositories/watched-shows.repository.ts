@@ -1,16 +1,14 @@
-import "server-only";
-
-import { createSupabaseAdminClient } from "@/utils/supabase/admin";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function getWatchedShowIds(
   userId: number,
   showIds: number[],
+  supabase: SupabaseClient,
 ): Promise<Set<number>> {
   if (showIds.length === 0) {
     return new Set();
   }
 
-  const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("user_watched_shows")
     .select("show_id")
@@ -26,8 +24,8 @@ export async function getWatchedShowIds(
 
 export async function getWatchedShows(
   userId: number,
+  supabase: SupabaseClient,
 ): Promise<{ id: number; name: string }[]> {
-  const supabase = createSupabaseAdminClient();
   const { data: watched, error: watchedError } = await supabase
     .from("user_watched_shows")
     .select("show_id")
@@ -64,8 +62,8 @@ export async function getWatchedShows(
 export async function insertUserWatchedShow(
   userId: number,
   showId: number,
+  supabase: SupabaseClient,
 ): Promise<void> {
-  const supabase = createSupabaseAdminClient();
   const { error } = await supabase
     .from("user_watched_shows")
     .upsert(
@@ -81,8 +79,8 @@ export async function insertUserWatchedShow(
 export async function deleteUserWatchedShow(
   userId: number,
   showId: number,
+  supabase: SupabaseClient,
 ): Promise<void> {
-  const supabase = createSupabaseAdminClient();
   const { error } = await supabase
     .from("user_watched_shows")
     .delete()
