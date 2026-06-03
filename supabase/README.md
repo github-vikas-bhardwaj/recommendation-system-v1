@@ -1,10 +1,11 @@
 # Supabase schema
 
-| File                           | Purpose                                              |
-| ------------------------------ | ---------------------------------------------------- |
-| `migrations/001_shows.sql`     | `shows` table + indexes                              |
-| `migrations/002_shows_rls.sql` | RLS: public read, anon insert/update for seed        |
-| `migrations/003_auth.sql`      | Custom auth: `users`, `sessions` (service role only) |
+| File                                    | Purpose                                              |
+| --------------------------------------- | ---------------------------------------------------- |
+| `migrations/001_shows.sql`              | `shows` table + indexes                              |
+| `migrations/002_shows_rls.sql`          | RLS: public read, anon insert/update for seed        |
+| `migrations/003_auth.sql`               | Custom auth: `users`, `sessions` (service role only) |
+| `migrations/004_user_watched_shows.sql` | Watchlist per user                                   |
 
 **Testing project:** `recommendation-system-testing-v1`  
 **Git branch for deploy:** `release/next`
