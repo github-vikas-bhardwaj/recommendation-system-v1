@@ -1,9 +1,10 @@
 # Supabase schema
 
-| File                           | Purpose                                       |
-| ------------------------------ | --------------------------------------------- |
-| `migrations/001_shows.sql`     | `shows` table + indexes                       |
-| `migrations/002_shows_rls.sql` | RLS: public read, anon insert/update for seed |
+| File                           | Purpose                                              |
+| ------------------------------ | ---------------------------------------------------- |
+| `migrations/001_shows.sql`     | `shows` table + indexes                              |
+| `migrations/002_shows_rls.sql` | RLS: public read, anon insert/update for seed        |
+| `migrations/003_auth.sql`      | Custom auth: `users`, `sessions` (service role only) |
 
 **Testing project:** `recommendation-system-testing-v1`  
 **Git branch for deploy:** `release/next`
@@ -27,6 +28,8 @@ npm run db:seed
 ```
 
 Uses `SUPABASE_SERVICE_ROLE_KEY` when set (recommended). Otherwise uses publishable key + `shows_insert_anon` policy.
+
+**Auth (server actions):** requires `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` — no RLS policies on `users` / `sessions`; only the admin client writes there.
 
 **After seeding:** consider removing `shows_insert_anon` and `shows_update_anon` in a follow-up migration so the app cannot modify catalog rows from the browser.
 

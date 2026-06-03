@@ -10,7 +10,9 @@ export function createSupabaseAdminClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!serviceRoleKey) {
-    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+    throw new Error(
+      "Missing SUPABASE_SERVICE_ROLE_KEY in .env.local. Add it from Supabase Dashboard → Project Settings → API → service_role (secret), then restart the dev server.",
+    );
   }
 
   return createClient(url, serviceRoleKey, {

@@ -1,6 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
+
+import { FlashFromCookie } from "./_components/flash-from-cookie";
 import { Footer } from "./footer";
 import { Header } from "./header";
 
@@ -45,6 +48,15 @@ export default function RootLayout({
         <Header />
         <main className="relative z-10 flex flex-1 flex-col">{children}</main>
         <Footer />
+        <FlashFromCookie />
+        <Toaster
+          richColors
+          position="top-right"
+          closeButton
+          expand
+          duration={4000}
+          theme="system"
+        />
       </body>
     </html>
   );

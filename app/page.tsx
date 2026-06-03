@@ -1,6 +1,14 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+import { getCurrentUser } from "@/lib/auth/get-current-user";
+
+export default async function Home() {
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/shows?page=1");
+  }
+
   return (
     <section className="relative mx-auto flex w-full flex-1 flex-col items-center justify-center px-6 py-20 text-center">
       <div className="relative z-20 flex flex-col items-center">
