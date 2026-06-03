@@ -32,6 +32,8 @@ Uses `SUPABASE_SERVICE_ROLE_KEY` when set (recommended). Otherwise uses publisha
 
 **Auth (server actions):** requires `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` — no RLS policies on `users` / `sessions`; only the admin client writes there.
 
+**Vercel (testing / production):** In the Vercel project → **Settings → Environment Variables**, add all three from `.env.example` for **Preview** and **Production** (same values as local testing Supabase). Redeploy after saving. Without them, auth and the header session check will fail at runtime.
+
 **After seeding:** consider removing `shows_insert_anon` and `shows_update_anon` in a follow-up migration so the app cannot modify catalog rows from the browser.
 
 **Later:** `002_add_embeddings.sql` will enable `vector` and add `embedding vector(1536)` when you start similarity search.
