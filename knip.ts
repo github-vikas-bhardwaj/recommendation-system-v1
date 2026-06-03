@@ -7,6 +7,8 @@ const config: KnipConfig = {
   // Barrel re-exports and public Show type alias (used by app code; knip does not trace all consumers)
   ignoreIssues: {
     "lib/db/index.ts": ["exports"],
+    "lib/env/app.ts": ["exports"],
+    "lib/env/index.ts": ["exports", "types"],
     "app/shows/show-card.tsx": ["types"],
   },
 };

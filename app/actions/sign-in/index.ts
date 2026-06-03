@@ -7,6 +7,7 @@ import { z } from "zod";
 import { verifyPassword } from "@/lib/auth/password";
 import { createSession } from "@/lib/auth/session";
 import { findUserByEmail } from "@/lib/db";
+import { usesSecureCookies } from "@/lib/env/app";
 
 import { signInSchema } from "./schema";
 
@@ -67,7 +68,7 @@ export async function signIn(
     httpOnly: false,
     path: "/",
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: usesSecureCookies(),
   });
   redirect("/shows?page=1");
 }

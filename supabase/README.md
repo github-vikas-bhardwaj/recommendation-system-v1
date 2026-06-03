@@ -32,7 +32,9 @@ Uses `SUPABASE_SERVICE_ROLE_KEY` when set (recommended). Otherwise uses publisha
 
 **Auth (server actions):** requires `SUPABASE_SERVICE_ROLE_KEY` in `.env.local` — no RLS policies on `users` / `sessions`; only the admin client writes there.
 
-**Vercel (testing / production):** In the Vercel project → **Settings → Environment Variables**, add all three from `.env.example` for **Preview** and **Production** (same values as local testing Supabase). Redeploy after saving. Without them, auth and the header session check will fail at runtime.
+**Environment variables:** See [docs/environments.md](../docs/environments.md) for the full matrix (local / testing / production). Copy `.env.example` to `.env.local` and set `APP_ENV=local` plus the three Supabase keys from the **testing** project.
+
+**Vercel:** Set `APP_ENV=testing` on the testing project and `APP_ENV=production` on production. Add all Supabase keys for Preview and Production. Redeploy after saving.
 
 **After seeding:** consider removing `shows_insert_anon` and `shows_update_anon` in a follow-up migration so the app cannot modify catalog rows from the browser.
 
