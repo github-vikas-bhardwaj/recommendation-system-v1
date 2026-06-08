@@ -1,4 +1,4 @@
-# Staged CI: lint, type-check, knip (parallel) → build (after all pass)
+# Staged CI: lint, type-check, test, knip (parallel) → build (after all pass)
 name: CI
 
 on:
@@ -66,6 +66,27 @@ jobs:
           echo "Running: npm run type-check"
           npm run type-check
 
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies (npm ci)..."
+          npm ci
+
+      - name: Vitest
+        run: |
+          echo "🔍 Running tests..."
+          echo "Running: npm run test:run"
+          npm run test:run
   knip:
     name: knip
     runs-on: ubuntu-latest
@@ -90,7 +111,7 @@ jobs:
 
   build:
     name: build
-    needs: [lint, type-check, knip]
+    needs: [lint, type-check, test, knip]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
