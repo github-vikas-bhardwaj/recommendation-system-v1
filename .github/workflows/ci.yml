@@ -127,6 +127,8 @@ jobs:
           npm ci
 
       - name: Build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           echo "🔍 Building the application..."
           echo "Running: npm run build"

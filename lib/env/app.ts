@@ -15,7 +15,9 @@ function isAppEnvironment(value: string): value is AppEnvironment {
  * - otherwise → testing
  */
 export function getAppEnvironment(): AppEnvironment {
-  const explicit = process.env.APP_ENV?.trim().toLowerCase();
+  const explicit = (
+    process.env.APP_ENV?.trim() || process.env.NEXT_PUBLIC_APP_ENV?.trim()
+  )?.toLowerCase();
   if (explicit && isAppEnvironment(explicit)) {
     return explicit;
   }
