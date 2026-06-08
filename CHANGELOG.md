@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.1](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/compare/v0.1.0...v0.1.1) (2026-06-03)
+
+### 🔨 Code Refactoring
+
+* made functions more testable ([7b74ab8](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/commit/7b74ab8ac341bc933359d6a344f0b0c54f960aed))
+
+### 🔧 Chores
+
+* reset version baseline for v0.0.1 ([254fc6c](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/commit/254fc6c69a08685b0c462de27a7996c102b6f396))
+
 ## 0.1.0 (2026-06-03)
 
 ### 🚀 Features
