@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/compare/v0.1.1...v0.2.0) (2026-06-08)
+
+### 🚀 Features
+
+* adding vitest setup & pagination unit test ([0850c6e](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/commit/0850c6e7c575d2818c62ecc617ed8fc620194167))
+* sentry added & configured for error monitoring ([3538c5b](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/commit/3538c5b8c5a76323a65a30e888090aaa68065477))
+
+### 🧪 Tests
+
+* adding unit tests for helpers/utilities/services ([89d508a](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/commit/89d508ae2de0aeac25329ea972bea3b8cbab1e8e))
+
 ## [0.1.1](https://github.com/github-vikas-bhardwaj/recommendation-system-v1/compare/v0.1.0...v0.1.1) (2026-06-03)
 
 ### 🔨 Code Refactoring
