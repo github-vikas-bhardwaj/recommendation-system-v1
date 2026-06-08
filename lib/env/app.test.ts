@@ -9,10 +9,19 @@ describe("getAppEnvironment", () => {
 
   it("prefers explicit APP_ENV", () => {
     vi.stubEnv("APP_ENV", "testing");
+    vi.stubEnv("NEXT_PUBLIC_APP_ENV", "production");
     vi.stubEnv("VERCEL", "1");
     vi.stubEnv("VERCEL_ENV", "production");
 
     expect(getAppEnvironment()).toBe("testing");
+  });
+
+  it("falls back to NEXT_PUBLIC_APP_ENV on the client", () => {
+    vi.stubEnv("APP_ENV", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_ENV", "production");
+    vi.stubEnv("VERCEL", "");
+
+    expect(getAppEnvironment()).toBe("production");
   });
 
   it("returns local when not on Vercel and APP_ENV is unset", () => {
