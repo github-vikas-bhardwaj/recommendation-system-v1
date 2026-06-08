@@ -7,6 +7,9 @@
     "dev:https": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "prepare": "husky",
     "lint": "eslint . --max-warnings 0",
     "type-check": "tsc --noEmit",
@@ -21,6 +24,7 @@
     "db:seed": "node --env-file=.env.local scripts/seed-shows.mjs"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.56.0",
     "@supabase/ssr": "0.10.3",
     "@supabase/supabase-js": "2.107.0",
     "argon2": "0.44.0",
@@ -39,6 +43,7 @@
     "@types/node": "20",
     "@types/react": "19",
     "@types/react-dom": "19",
+    "@vitest/coverage-v8": "4.1.8",
     "eslint": "9",
     "eslint-config-next": "16.2.6",
     "eslint-config-prettier": "10.1.8",
@@ -50,6 +55,7 @@
     "prettier": "3.8.3",
     "release-it": "20.2.0",
     "tailwindcss": "4",
-    "typescript": "5"
+    "typescript": "5",
+    "vitest": "4.1.8"
   }
 }
